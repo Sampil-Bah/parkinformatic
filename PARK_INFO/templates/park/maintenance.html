@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!--begin::Row-->
+        <div class="row g-4"> <!--begin::Col-->
+            <div class="col-12">
+            <div class="col-md-12"> <!--begin::Different Height-->
+                <div class="card card-info card-outline mb-4"> <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">Maintenance D'un Equipement</div>
+                    </div> <!--end::Header--> <!--begin::Form-->
+                    <form method="POST"> <!--begin::Body-->
+                        {% csrf_token %}
+                        <div class="card-body"> <!--begin::Row-->
+                            <div class="row g-3"> <!--begin::Col-->
+                                <div class="col-md-6"> 
+                                    <label for="equipement" class="form-label">Equipement</label> 
+                                    <select class="form-select" name="equipment" id="equipment">
+                                        <option selected disabled value="">Choose...</option>
+                                        {% for equipment in equipements %}
+                                        <option value="{{equipment.id}}">{{equipment.serial_number}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6"> <label for="validationCustom05" class="form-label">
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6">
+                                    <label for="probleme" class="form-label">Probleme</label>
+                                    <textarea  name='probleme' class="form-control" style="height: 100px"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="probleme" class="form-label">Action Effectuée</label>
+                                    <textarea  name="action" class="form-control" style="height: 100px"></textarea>
+                                </div>
+                                
+                            </div> <!--end::Row-->
+                        </div> <!--end::Body--> <!--begin::Footer-->
+                        <div class="card-footer"> <button class="btn btn-info" type="submit">Enregistrer</button> </div> <!--end::Footer-->
+                    </form> <!--end::Form--> <!--begin::JavaScript-->
+                </div> <!--end::Form Validation-->
+            </div> <!--end::Col-->
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div> <!--end::App Content-->
+{% endblock content %}

@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Liste Equipement</h3>
+                    </div> <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="form-group ">
+                            <input id="search" class="form-control" type="text" placeholder="Search....">
+                          </div>
+                          <br>
+                        <table class="table table-bordered" id="results">
+                            <thead>
+                                <tr>
+                                    <th>Numero de serie</th>
+                                    <th>Type Equipement</th>
+                                    <th>Marque</th>
+                                    <th>Modele</th>
+                                    <th>Date achat</th>
+                                    <th>Date Expiration</th>
+                                    <th>Statut</th>
+                                    <th style="width: 40px">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% if equipments %}
+                              {% for equipement in equipments  %}
+          
+                              {% if equipement.status == 'travail' %}
+                                <tr class="align-middle table-success">
+                                    <td> {{equipement.serial_number}}</td>
+                                    <td>{{equipement.type_eq}}</td>
+                                    <td>{{equipement.brand}}</td>
+                                    <td>{{equipement.modele_eq}}</td>
+                                    <td>{{equipement.purchase_date}}</td>
+                                    <td>{{equipement.warranty_expire}}</td>
+                                    <td>En service</td>
+                                    <td class="d-flex justify-content-between">
+                                        <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                                            data-id="{{equipement.id}}"
+                                            data-equipment-id="{{ equipment.id }}" 
+                                            data-current-status="{{ equipment.status }}">
+                                                Voir
+                                        </button>
+                                        {% if request.user.role == 'Manager' %}
+                                        <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                                            data-id="{{ equipement.id }}">
+                                                Statut
+                                        </button>
+                                        {% endif %} 
+                                    </td>
+                                </tr>
+                                {% elif equipement.status == 'hors_service' %}
+                                <tr class="align-middle table-info">
+                                  <td> {{equipement.serial_number}}</td>
+                                  <td>{{equipement.type_eq}}</td>
+                                  <td>{{equipement.brand}}</td>
+                                  <td>{{equipement.modele_eq}}</td>
+                                  <td>{{equipement.purchase_date}}</td>
+                                  <td>{{equipement.warranty_expire}}</td>
+                                  <td>Hors Service</td>
+                                    <td class="d-flex justify-content-between">
+                                        <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                                            data-id="{{equipement.id}}"
+                                            data-equipment-id="{{ equipment.id }}" 
+                                            data-current-status="{{ equipment.status }}">
+                                                Voir
+                                        </button>
+                                            
+                                        {% if request.user.role == 'Manager' %}
+                                        <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                                            data-id="{{ equipement.id }}">
+                                                Statut
+                                        </button>
+                                        {% endif %} 
+                                    </td>
+                                </tr>
+                                {% elif equipement.status == 'panne' %}
+                                <tr class="align-middle table-danger">
+                                  <td> {{equipement.serial_number}}</td>
+                                  <td>{{equipement.type_eq}}</td>
+                                  <td>{{equipement.brand}}</td>
+                                  <td>{{equipement.modele_eq}}</td>
+                                  <td>{{equipement.purchase_date}}</td>
+                                  <td>{{equipement.warranty_expire}}</td>
+                                  <td>En Panne</td>
+                                    <td class="d-flex justify-content-between">
+                                        <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                                            data-id="{{equipement.id}}"
+                                            data-equipment-id="{{ equipment.id }}" 
+                                            data-current-status="{{ equipment.status }}">
+                                                Voir
+                                        </button>
+                                            
+                                        {% if request.user.role == 'Manager' %}
+                                        <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                                            data-id="{{ equipement.id }}">
+                                                Statut
+                                        </button>
+                                        {% endif %} 
+                                    </td>
+                                </tr>
+                                {% elif equipement.status == 'en_reparation' %}
+                                <tr class="align-middle table-warning">
+                                  <td> {{equipement.serial_number}}</td>
+                                  <td>{{equipement.type_eq}}</td>
+                                  <td>{{equipement.brand}}</td>
+                                  <td>{{equipement.modele_eq}}</td>
+                                  <td>{{equipement.purchase_date}}</td>
+                                  <td>{{equipement.warranty_expire}}</td>
+                                  <td>En Reparation</td>
+                                    <td class="d-flex justify-content-between">
+                                        <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                                            data-id="{{equipement.id}}"
+                                            data-equipment-id="{{ equipment.id }}" 
+                                            data-current-status="{{ equipment.status }}">
+                                                Voir
+                                        </button>
+                                        {% if request.user.role == 'Manager' %}
+                                        <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                                            data-id="{{ equipement.id }}">
+                                                Statut
+                                        </button>
+                                        {% endif %} 
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-center text-white">Pas d'equipement.</p>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div> <!-- /.card-body -->
+                    {% if equipments.has_other_pages %}
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-end">
+                            {% if equipments.has_previous %}
+                            <li class="page-item"> <a class="page-link" href="?page={{ equipments.previous_page_number }}">&laquo;</a> </li>
+                            {% endif %}
+                            {% for page_number in equipments.paginator.page_range %}
+                                {% if equipments.number == page_number %}
+                                <button class="btn btn-outline-primary active">
+                                    <span> {{ page_number }}  </span>
+                                </button>
+                                {% else %}
+                                <li class="page-item"> <a class="page-link" href="?page={{page_number}}">{{ page_number }}</a> </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if equipments.has_next %}
+                            <li class="page-item"> <a class="page-link" href="?page={{ equipments.next_page_number }}">&raquo;</a> </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div> <!-- /.card -->
+            </div> <!-- /.col -->
+            </div> <!-- /.col -->
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div> <!--end::App Content-->
+
+
+<div class="modal fade" id="basicModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">INFORMATION GENERALE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content pt-2" id="modalContent">
+                    <!-- Data will be loaded dynamically here -->
+                    <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                        <!-- <h5 class="card-title">Details Equipements</h5> -->
+                        <div class="text-center bg-secondary text-white py-2">Details Equipements</div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Numero de Serie</div>
+                            <div class="col-lg-9 col-md-8" id="serial-number"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Type Equipement</div>
+                            <div class="col-lg-9 col-md-8" id="type-equipment"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Marque</div>
+                            <div class="col-lg-9 col-md-8" id="brand"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Modele</div>
+                            <div class="col-lg-9 col-md-8" id="model"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Date Achat</div>
+                            <div class="col-lg-9 col-md-8" id="purchase-date"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Date Expiration</div>
+                            <div class="col-lg-9 col-md-8" id="warranty-expire"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Statut</div>
+                            <div class="col-lg-9 col-md-8" id="status"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- second modal pour le status -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusModalLabel">Modifier le Statut de l'Équipement</h5>
+      
+      </div>
+      <div class="modal-body">
+        <form id="statusForm" method="POST" action="">
+          {% csrf_token %}
+          <input type="hidden" id="equipmentId" name="id">
+          <div class="mb-3">
+            <label for="statusSelect" class="form-label">Nouveau Statut</label>
+            <select id="statusSelect" name="status" class="form-select">
+              <option value="travail" selected>Travail</option>
+              <option value="en_reparation">En reparation</option>
+              <option value="hors_service">Hors Service</option>
+              <option value="panne">En panne</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Modifier</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Add this line to include jQuery before any script that uses it -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+    console.log('hello there');
+
+    $(document).ready(function(){
+      $('#basicModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget); // Button that triggered the modal
+          var objectId = button.data('id'); // Extract object ID from data-* attributes
+          console.log(objectId);
+          // Make an AJAX call to fetch the data
+          $.ajax({
+              url: `/park/detail/?id=${objectId}`,  // Update with your correct URL path  `/detail/?id=${objectId}`
+              method: 'GET',
+              data: {
+                  'id': objectId  // Pass the object ID to the server
+              },
+              success: function(response){
+                // Update the modal content with the fetched data
+                $('#serial-number').text(response.serial_number);
+                $('#type-equipment').text(response.type_eq);
+                $('#brand').text(response.brand);
+                $('#model').text(response.modele_eq);
+                $('#purchase-date').text(response.purchase_date);
+                $('#warranty-expire').text(response.warranty_expire);
+                $('#status').text(response.status);
+              },
+              error: function(){
+                  console.log("Error loading modal data");
+              }
+          });
+      });
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+  
+$(document).ready(function() {
+
+  $('#statusModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget); 
+      var equipmentId = button.data('id'); 
+      console.log('this is my status modal');
+      console.log('id:',equipmentId);
+
+  // Handle form submission
+  $('#statusForm').on('submit', function(e) {
+      e.preventDefault();
+
+      $.ajax({
+          type: 'POST',
+          url: `/park/recherche/?id=${equipmentId}`,  // Your Django URL for updating status `/park/update/?id=${objectId}`
+          data: $(this).serialize(),
+          success: function(response) {
+              if (response.success) {
+                  // Update the UI or display a success message
+                  alert('Statut modifié avec succès: ' + response.new_status);
+                  $('#statusModal').modal('hide');
+                  location.reload();
+              }
+          },
+          error: function(){
+            console.log("Error loading modal data");
+        }
+      });
+  });
+});
+});
+
+
+var $jq = jQuery.noConflict();
+    $jq(document).ready(function(){
+        $jq("#search").on("keyup", function(){
+            var query = $jq(this).val().toLowerCase();
+            console.log(query);
+            $jq.ajax({
+                url: "{% url 'park:equipment-ajax-search' %}",
+                type: "GET",
+                data: { query: query },
+                success: function(data) {
+                    $jq("#results").html(data); // Assuming `data` contains HTML
+                    //console.log('data:', data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error in search request:", status, error);
+                }
+            });
+        });
+    });
+ 
+
+  
+  </script>
+
+{% endblock content %}

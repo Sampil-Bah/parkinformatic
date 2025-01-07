@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!--begin::Row-->
+        <div class="row g-4"> <!--begin::Col-->
+            <div class="col-12">
+            <div class="col-md-12"> <!--begin::Different Height-->
+                <div class="card card-info card-outline mb-4"> <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">Enregistrement D'un Equipement</div>
+                    </div> <!--end::Header--> <!--begin::Form-->
+                    <form method='POST'> <!--begin::Body-->
+                        {% csrf_token %}
+                        <div class="card-body"> <!--begin::Row-->
+                            <div class="row g-3"> <!--begin::Col-->
+                                <div class="col-md-6"> 
+                                    <label for="validationCustom01" class="form-label">Numero de serie</label> 
+                                    <input type="text" class="form-control" id="numero_serie" name="numero_serie">
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6"> 
+                                    <label for="type_equipement" class="form-label">Type Equipement</label> 
+                                    <select class="form-select" id="type_equipement" name="type_equipment">
+                                        <option selected disabled value="">Choisir...</option>
+                                        {% for type_eq in type_equipment %}
+                                        <option value="{{type_eq.id}}">{{type_eq.nom_equipement}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6"> <label for="validationCustomUsername" class="form-label">Marque</label>
+                                    <div class="input-group has-validation"> <span class="input-group-text" id="inputGroupPrepend">@</span> 
+                                        <input type="text" class="form-control" name="marque" id="marque" aria-describedby="inputGroupPrepend">
+                                    </div>
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6"> <label for="validationCustom03" class="form-label">Modele</label> 
+                                    <input type="text" name="modele"  class="form-control" id="modele">
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6"> <label for="validationCustom03" class="form-label">Date Achat</label> 
+                                    <input type="date" name="date_achat"  class="form-control" id="date_achat">
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6"> <label for="validationCustom03" class="form-label">Guarantie</label> 
+                                    <input type="date" name="guarantie"  class="form-control" id="guarantie">
+                                </div> <!--end::Col--> <!--begin::Col-->
+                                <div class="col-md-6"> 
+                                    <label for="validationCustom04" class="form-label">Statut</label> 
+                                    <select class="form-select" name="status" id="status">
+                                        <option selected disabled value="">Choose...</option>
+                                        <option value="travail">En service</option>
+                                        <option value="en_reparation">En reparation</option>
+                                        <option value="hors_service">Hors Service</option>
+                                        <option value="panne">En panne</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"> 
+                                    <label for="selectType" class="form-label">Choisir la localité</label> 
+                                        <select class="form-select" id="selectType">
+                                            <option selected disabled value="">Choose...</option>
+                                            <option value="commissariat">Commissariat</option>
+                                            <option value="etat_civil">Etat Civil</option>
+                                            <option value="data">Autres</option>
+                                        </select>
+                                    <div class="invalid-feedback">
+                                        Please select a valid state.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-none" id="commissariatField"> 
+                                    <label for="validationCustom04" class="form-label">Commissariat</label> 
+                                        <select class="form-select" name="commissariat" id="commissariat">
+                                            <option selected disabled value="">Choose...</option>
+                                            {% for cc in commissariats %}
+                                            <option value="{{cc.id}}" >{{cc.commissariat}}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="col-md-6 d-none" id="etatCivilField"> 
+                                    <label for="validationCustom04" class="form-label">Etat civil</label> 
+                                        <select class="form-select" name="etat_civil" id="etat_civil">
+                                            <option selected disabled value="">Choose...</option>
+                                            {% for cc in etat_civils %}
+                                            <option value="{{cc.id}}" >{{cc.etat_civil}}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="col-md-6 d-none" id="autresField"> 
+                                    <label for="validationCustom04" class="form-label">Autres</label> 
+                                        <select class="form-select" name="autres" id="autres">
+                                            <option selected disabled value="">Choose...</option>
+                                            {% for dd in direction %}
+                                            <option value="{{dd.id}}" >{{dd.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                            </div>
+                        </div> <!--end::Body--> <!--begin::Footer-->
+                        <div class="card-footer"> 
+                            <button class="btn btn-info" type="submit">Enregistrer</button> 
+                        </div> <!--end::Footer-->
+                    </form> <!--end::Form--> 
+                </div> <!--end::Form Validation-->
+            </div> <!--end::Col-->
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div> <!--end::App Content-->
+
+<script>
+
+    console.log('hello im working');
+    document.addEventListener("DOMContentLoaded", function() {
+      const selectType = document.getElementById('selectType');
+      const commissariatField = document.getElementById('commissariatField');
+      const etatCivilField = document.getElementById('etatCivilField');
+
+      console.log(selectType);
+  
+      // Listen for changes on the selectType dropdown
+      selectType.addEventListener('change', function() {
+        const selectedValue = selectType.value;
+  
+        // Hide both fields initially using Bootstrap's `d-none`
+        commissariatField.classList.add('d-none');
+        etatCivilField.classList.add('d-none');
+  
+        // Show the corresponding field based on the selection
+        if (selectedValue === 'commissariat') {
+          commissariatField.classList.remove('d-none');
+          commissariatField.classList.add('d-block');
+        } else if (selectedValue === 'etat_civil') {
+          etatCivilField.classList.remove('d-none');
+          etatCivilField.classList.add('d-block');
+        } else {
+            autresField.classList.remove('d-none');
+            autresField.classList.add('d-block');
+        }
+      });
+    });
+  </script>
+{% endblock content %}

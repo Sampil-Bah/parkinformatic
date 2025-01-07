@@ -1,0 +1,116 @@
+<thead>
+    <tr>
+        <th>Numero de serie</th>
+        <th>Type Equipement</th>
+        <th>Marque</th>
+        <th>Modele</th>
+        <th>Date achat</th>
+        <th>Date Expiration</th>
+        <th>Statut</th>
+        <th style="width: 40px">Action</th>
+    </tr>
+</thead>
+<tbody>
+  {% for equipement in equipments  %}
+
+  {% if equipement.status == 'travail' %}
+    <tr class="align-middle table-success">
+        <td> {{equipement.serial_number}}</td>
+        <td>{{equipement.type_eq}}</td>
+        <td>{{equipement.brand}}</td>
+        <td>{{equipement.modele_eq}}</td>
+        <td>{{equipement.purchase_date}}</td>
+        <td>{{equipement.warranty_expire}}</td>
+        <td>En service</td>
+        <td>
+            <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                data-id="{{equipement.id}}"
+                data-equipment-id="{{ equipment.id }}" 
+                data-current-status="{{ equipment.status }}">
+                    Voir
+            </button>
+                
+            <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                data-id="{{ equipement.id }}">
+                    Statut
+            </button>
+        </td>
+    </tr>
+    {% elif equipement.status == 'hors_service' %}
+    <tr class="align-middle table-info">
+      <td> {{equipement.serial_number}}</td>
+      <td>{{equipement.type_eq}}</td>
+      <td>{{equipement.brand}}</td>
+      <td>{{equipement.modele_eq}}</td>
+      <td>{{equipement.purchase_date}}</td>
+      <td>{{equipement.warranty_expire}}</td>
+      <td>Hors Service</td>
+        <td>
+            <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                data-id="{{equipement.id}}"
+                data-equipment-id="{{ equipment.id }}" 
+                data-current-status="{{ equipment.status }}">
+                    Voir
+            </button>
+                
+            <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                data-id="{{ equipement.id }}">
+                    Statut
+            </button>
+        </td>
+    </tr>
+    {% elif equipement.status == 'panne' %}
+    <tr class="align-middle table-danger">
+      <td> {{equipement.serial_number}}</td>
+      <td>{{equipement.type_eq}}</td>
+      <td>{{equipement.brand}}</td>
+      <td>{{equipement.modele_eq}}</td>
+      <td>{{equipement.purchase_date}}</td>
+      <td>{{equipement.warranty_expire}}</td>
+      <td>En Panne</td>
+        <td>
+            <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                data-id="{{equipement.id}}"
+                data-equipment-id="{{ equipment.id }}" 
+                data-current-status="{{ equipment.status }}">
+                    Voir
+            </button>
+                
+            <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                data-id="{{ equipement.id }}">
+                    Statut
+            </button>
+        </td>
+    </tr>
+    {% elif equipement.status == 'en_reparation' %}
+    <tr class="align-middle table-warning">
+      <td> {{equipement.serial_number}}</td>
+      <td>{{equipement.type_eq}}</td>
+      <td>{{equipement.brand}}</td>
+      <td>{{equipement.modele_eq}}</td>
+      <td>{{equipement.purchase_date}}</td>
+      <td>{{equipement.warranty_expire}}</td>
+      <td>En Reparation</td>
+        <td>
+            <button type="button" class="badge text-white bg-success status-btn" data-bs-toggle="modal" data-bs-target="#basicModal"
+                data-id="{{equipement.id}}"
+                data-equipment-id="{{ equipment.id }}" 
+                data-current-status="{{ equipment.status }}">
+                    Voir
+            </button>
+                
+            <button type="button" class="badge text-white bg-warning" data-bs-toggle="modal" data-bs-target="#statusModal" 
+                data-id="{{ equipement.id }}">
+                    Statut
+            </button>
+        </td>
+    </tr>
+    {% endif %}
+    {% empty %}
+            <tr>
+                <td colspan="5">No results found</td>
+            </tr>
+{% endfor %}
+</tbody>
+          
+

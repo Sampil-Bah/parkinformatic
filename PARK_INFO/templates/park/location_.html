@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="app-content">
+  <div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group ">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4" id="commissariatField">
+                        <label for="commissariat" class="form-label">Commissariat</label>
+                        <select name="commissariat" id="commissariatSelect" class="form-select" aria-label="Default select example">
+                          <option>......</option>
+                          {% for cc in commissariats %}
+                          <option value="{{cc.id}}" >{{cc.commissariat}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4" id="etatCivilField">
+                        <label for="etat_civil" class="form-label">Etat Civil</label>
+                        <select name="etat_civil" id="etatCivilSelect" class="form-select" aria-label="Default select example">
+                          <option>.....</option>
+                          {% for cc in etat_civils %}
+                          <option value="{{cc.id}}" >{{cc.etat_civil}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                   
+                    <div class="col-md-4 sm-2">
+                        <br>
+                        <button class="btn btn-info" id="soumission" type="submit">Rechercher</button>
+                    </div>
+                    <br><br>
+                    
+                </div>
+                </form>
+            </div>
+            <br>
+            <div id="results"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+  
+  <!-- End Basic Modal-->
+
+  <!-- Add this line to include jQuery before any script that uses it -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+    document.getElementById("soumission").addEventListener("click", function() {
+        // Show the results table by changing its display property
+        const resultsDiv = document.getElementById("results");
+    
+        // Only show the table if it is currently hidden
+        if (resultsDiv.style.display === "none") {
+            resultsDiv.style.display = "block";
+        }
+    });
+   
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+    
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('soumission').addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche le comportement par défaut du bouton
+
+            console.log('working...');
+    
+            // Récupération des valeurs du formulaire
+            const commissariat = document.getElementById('commissariatSelect').value;
+            const etatCivil = document.getElementById('etatCivilSelect').value;
+            const csrfToken = getCookie('csrftoken');
+
+            console.log('com:'+commissariat);
+            console.log('etat civil'+etatCivil);
+    
+            // Préparation des données pour l'envoi
+            const formData = new FormData();
+            formData.append('commissariat', commissariat);
+            formData.append('etat_civil', etatCivil);
+            formData.append('csrfmiddlewaretoken', csrfToken);
+    
+            // Envoi de la requête POST en utilisant fetch
+            fetch("{% url 'park:location' %}", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json()) // Convertir la réponse en JSON
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ""; // Effacer les résultats précédents
+    
+                if (data.equipements_data.length > 0) {
+                    // Créer un tableau avec les données récupérées
+                    let table = '<table class="table"><thead><tr class="align-middle"><th>Numero de serie</th><th>Type Equipement</th><th>Marque</th><th>Modele</th><th>Date achat</th><th>Date Expiration</th><th>Statut</th></tr></thead>';
+                    data.equipements_data.forEach(function(equipement, index) {
+
+                      let rowClass = ''; // To store the appropriate row class based on status
+                      let statusText = ''; // Text to display for the status
+
+                      // Determine the row class and status text based on the equipment's status
+                      if (equipement.status === 'travail') {
+                          rowClass = 'table-success';
+                          statusText = 'En service';
+                      } else if (equipement.status === 'hors_service') {
+                          rowClass = 'table-info';
+                          statusText = 'Hors Service';
+                      } else if (equipement.status === 'panne') {
+                          rowClass = 'table-danger';
+                          statusText = 'Panne';
+                      } else if (equipement.status === 'en_reparation') {
+                          rowClass = 'table-warning';
+                          statusText = 'En Reparation';
+                      }
+                        table += `
+                           
+                            <tr class="${rowClass}">
+                              <td scope="row">${equipement.serial_number}</td>
+                              <td>${equipement.type_eq}</td>
+                              <td>${equipement.brand}</td>
+                              <td>${equipement.modele_eq}</td>
+                              <td>${equipement.purchase_date}</td>
+                              <td>${equipement.warranty_expire}</td>
+                              <td>${statusText}</td>
+                            </tr>
+                        `;
+                    });
+                    table += '</tbody></table>';
+                    resultsDiv.innerHTML = table; // Insérer le tableau dans le div
+                } else {
+                    resultsDiv.innerHTML = "<p>No equipment found.</p>";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+    
+
+  
+  </script>
+  
+
+{% endblock content %}

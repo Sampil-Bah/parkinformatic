@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Audit des appareils maintenus</h3>
+                    </div> <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="form-group ">
+                            <input id="search" class="form-control" type="text" placeholder="Search....">
+                          </div>
+                          <br>
+                        <table class="table table-bordered" id="results">
+                            <thead>
+                                <tr>
+                                    <th>Numero de serie</th>
+                                    <th>Type Equipement</th>
+                                    <th>Marque</th>
+                                    <th>Probleme</th>
+                                    <th>Action</th>
+                                    <th>Effectuer par</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if maintenance %}
+                                {% for mm in maintenance  %}
+          
+                                <tr class="align-middle">
+                                    <td>{{mm.equipment.serial_number}}</td>
+                                    <td>{{mm.equipment.type_eq}}</td>
+                                    <td>{{mm.equipment.brand}}</td>
+                                    <td>{{mm.issue_description}}</td>
+                                    <td>{{mm.action_taken}}</td>
+                                    <td> <u>{{mm.technician.username}}</u></td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div> <!-- /.card-body -->
+                    {% if maintenance.has_other_pages %}
+                    <div class="card-footer clearfix"
+                        <ul class="pagination pagination-sm m-0 float-end">
+                            {% if maintenance.has_previous %}
+                            <li class="page-item"> <a class="page-link" href="?page={{ maintenance.previous_page_number }}">&laquo;</a> </li>
+                            {% endif %}
+                            {% for page_number in maintenance.paginator.page_range %}
+                                {% if maintenance.number == page_number %}
+                                <button class="btn btn-outline-primary active">
+                                    <span> {{ page_number }}  </span>
+                                </button>
+                                {% else %}
+                                <li class="page-item"> <a class="page-link" href="?page={{page_number}}">{{ page_number }}</a> </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if maintenance.has_next %}
+                            <li class="page-item"> <a class="page-link" href="?page={{ maintenance.next_page_number }}">&raquo;</a> </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div> <!-- /.card -->
+            </div> <!-- /.col -->
+            </div> <!-- /.col -->
+        </div> <!--end::Row-->
+    </div> <!--end::Container-->
+</div> <!--end::App Content-->
+
+
+<!-- Add this line to include jQuery before any script that uses it -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+
+var $jq = jQuery.noConflict();
+  $jq(document).ready(function(){
+      $jq("#search").on("keyup", function(){
+          var query = $jq(this).val().toLowerCase();
+          console.log(query)
+          $jq.ajax({
+              url: "{% url 'park:audit-ajax-search' %}",
+              type: "GET",
+              data: { query: query },
+              success: function(data) {
+                  $jq("#results").html(data); // Assuming `data` contains HTML
+                  //console.log('data:', data);
+              },
+              error: function(xhr, status, error) {
+                  console.error("Error in search request:", status, error);
+              }
+          });
+      });
+  });
+
+
+
+</script>
+
+{% endblock content %}

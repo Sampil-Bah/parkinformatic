@@ -1,0 +1,29 @@
+<thead>
+    <tr>
+        <th>Numero de serie</th>
+        <th>Type Equipement</th>
+        <th>Marque</th>
+        <th>Probleme</th>
+        <th>Action</th>
+        <th>Effectuer par</th>
+    </tr>
+</thead>
+<tbody>
+
+    {% for mm in maintenance  %}
+      
+    <tr class="align-middle">
+        <td>{{mm.equipment.serial_number}}</td>
+        <td>{{mm.equipment.type_eq}}</td>
+        <td>{{mm.equipment.brand}}</td>
+        <td>{{mm.issue_description}}</td>
+        <td>{{mm.action_taken}}</td>
+        <td>{{mm.technician.username}}</td>
+    </tr>
+    {% empty %}
+            <tr>
+                <td colspan="5">No results found</td>
+            </tr>
+    {% endfor %}
+
+</tbody>
