@@ -179,8 +179,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Répertoire où collecter les fichiers statiques
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Emplacements supplémentaires pour rechercher des fichiers statiques
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static/'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 # MEDIA_URL = '/images/'
