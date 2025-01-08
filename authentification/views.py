@@ -12,47 +12,31 @@ from .forms import UserForm
 from .models import *
 
 class HomeView(View):
-    
     """
-        this is the authentication home view where 
-        the user get authenticated to access the home page
+    This is the authentication home view where 
+    the user gets authenticated to access the home page.
     """
 
-    template_name = 'authentification/index.html' 
+    template_name = 'authentification/index.html'
 
-    def get(self,request, *args, **kwargs):
-
+    def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
-    
-    def post(self, request, *args, **kwargs):
 
+    def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return render(request, self.template_name, {'error': 'Invalid email or password'})
-
-        # Vérifie si le mot de passe est correct
-        if user.check_password(password):
-            print('Password is correct')
-        else:
-            return render(request, self.template_name, {'error': 'Invalid email or password'})
-
-        print(f'user : {user}')
-        # Authentifie l'utilisateur
-        # user = authenticate(request, username=username, password=password)
-        # print(f'Authenticated User: {user}')
+        # Authentification
+        user = authenticate(request, username=email, password=password)
 
         if user is not None:
+            # Connecte l'utilisateur et le redirige
             login(request, user)
             return redirect('park:home')
-
-        context = {
-            'error': 'Invalid username or password'
-        }
-        return render(request, self.template_name, context)
+        else:
+            # Retourne l'erreur en cas d'identifiants invalides
+            context = {'error': 'Invalid email or password'}
+            return render(request, self.template_name, context)
 
 
     
