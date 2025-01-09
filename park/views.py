@@ -303,6 +303,7 @@ class LocationsView(LoginRequiredMixin, View):
     context = {
             'commissariats' : Commissariat.objects.all(),
             'etat_civils' : EtatCivil.objects.all(),
+            'direction' : Direction.objects.all()
         }
 
     def get(self, request, *args, **kwargs):
@@ -313,6 +314,7 @@ class LocationsView(LoginRequiredMixin, View):
 
         commissariat_id = request.POST.get('commissariat')
         etat_civil_id = request.POST.get('etat_civil')
+        direction_id = request.POST.get('direction')
         
         equipements_data = []
 
@@ -323,6 +325,9 @@ class LocationsView(LoginRequiredMixin, View):
         elif etat_civil_id and etat_civil_id.isdigit():
             # print(f"Etat Civil ID: {etat_civil_id}")
             equipments = Equipment.objects.filter(etat_civil_id=etat_civil_id)
+
+        elif direction_id and direction_id.isdigit():
+            equipments = Equipment.objects.filter(direction_id=direction_id)
 
         equipements_data = [
             {

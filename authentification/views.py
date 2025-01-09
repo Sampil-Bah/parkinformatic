@@ -4,7 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_POST
 from django.views import View
 
+from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import User
 
@@ -23,6 +26,7 @@ class HomeView(View):
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
+
         email = request.POST.get('email')
         password = request.POST.get('password')
 
@@ -87,6 +91,27 @@ class SigninView(View):
 def logout_view(request):
     logout(request)
     return redirect('authentification:login')
+
+
+class CustomPasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, PasswordChangeView):
+    """
+    A view for authenticated users to change their password.
+    """
+    template_name = 'authentification/password_change.html'
+    success_url = reverse_lazy('park:login')  # Redirige après succès
+    success_message = "Your password was successfully updated!"
+
+    def form_valid(self, form):
+        """
+        Hook to add custom behavior when the form is valid.
+        """
+        response = super().form_valid(form)
+        # Vous pouvez ajouter des comportements personnalisés ici, si nécessaire.
+        return response
+
+
+
+
         
     
        

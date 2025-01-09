@@ -1,172 +1,222 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="app-content">
   <div class="container-fluid">
     <div class="card">
-        <div class="card-body">
-            <div class="form-group ">
-                <form action="" method="POST">
-                    {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-4" id="commissariatField">
-                        <label for="commissariat" class="form-label">Commissariat</label>
-                        <select name="commissariat" id="commissariatSelect" class="form-select" aria-label="Default select example">
-                          <option>......</option>
-                          {% for cc in commissariats %}
-                          <option value="{{cc.id}}" >{{cc.commissariat}}</option>
-                          {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-4" id="etatCivilField">
-                        <label for="etat_civil" class="form-label">Etat Civil</label>
-                        <select name="etat_civil" id="etatCivilSelect" class="form-select" aria-label="Default select example">
-                          <option>.....</option>
-                          {% for cc in etat_civils %}
-                          <option value="{{cc.id}}" >{{cc.etat_civil}}</option>
-                          {% endfor %}
-                        </select>
-                    </div>
-                   
-                    <div class="col-md-4 sm-2">
-                        <br>
-                        <button class="btn btn-info" id="soumission" type="submit">Rechercher</button>
-                    </div>
-                    <br><br>
-                    
-                </div>
-                </form>
+        <div class="card-header">
+            <h3 class="card-title">Recherche des equipements par location</h3>
+        </div> <!-- /.card-header -->
+      <div class="card-body">
+        <!-- Radio Buttons -->
+        <div class="row">
+            <div class="col-md-4">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="radio" 
+                  name="options" 
+                  id="option1" 
+                  value="option1" 
+                  onclick="showEtatCivilField()" 
+                  checked>
+                <label class="form-check-label" for="option1">État Civil</label>
+              </div>
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="radio" 
+                  name="options" 
+                  id="option2" 
+                  value="option2" 
+                  onclick="showCommissariatField()">
+                <label class="form-check-label" for="option2">Commissariat</label>
+              </div>
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="radio" 
+                  name="options" 
+                  id="option3" 
+                  value="option3" 
+                  onclick="showDirectionField()">
+                <label class="form-check-label" for="option3">Direction</label>
+              </div>
             </div>
-            <br>
-            <div id="results"></div>
-        </div>
-    </div>
-</div>
-</div>
-
-
-
-
-
-
+          </div>
   
-  <!-- End Basic Modal-->
+          <form id="dynamicForm">
+            {% csrf_token %}
+            <div class="row">
+              <!-- Commissariat Field -->
+              <div class="col-md-4" id="commissariatField" style="display: none;">
+                <label for="commissariat" class="form-label">Commissariat</label>
+                <select name="commissariat" id="commissariatSelect" class="form-select">
+                  <option value="">Select...</option>
+                  {% for cc in commissariats %}
+                  <option value="{{ cc.id }}">{{ cc.commissariat }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+  
+              <!-- Etat Civil Field -->
+              <div class="col-md-4" id="etatCivilField" style="display: block;">
+                <label for="etat_civil" class="form-label">État Civil</label>
+                <select name="etat_civil" id="etatCivilSelect" class="form-select">
+                  <option value="">Choose...</option>
+                  {% for ec in etat_civils %}
+                  <option value="{{ ec.id }}">{{ ec.etat_civil }}</option>
+                  {% endfor %}
+                </select>
+              </div>
 
-  <!-- Add this line to include jQuery before any script that uses it -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+              <!-- Direction -->
+            <div class="col-md-4" id="autresField" style="display: none;"> 
+                <label for="validationCustom04" class="form-label">Autres</label> 
+                    <select class="form-select" name="direction" id="directionSelect">
+                        <option value="">Choose...</option>
+                        {% for dd in direction %}
+                        <option value="{{dd.id}}" >{{dd.name}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+  
+              <!-- Submit Button -->
+              <div class="col-md-4">
+                <br>
+                <button class="btn btn-info" id="soumission" type="button">Rechercher</button>
+              </div>
+            </div>
+          </form>
+        
+        
 
-  <script>
+        <br>
+        <!-- Results -->
+        <div id="results"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    document.getElementById("soumission").addEventListener("click", function() {
-        // Show the results table by changing its display property
-        const resultsDiv = document.getElementById("results");
-    
-        // Only show the table if it is currently hidden
-        if (resultsDiv.style.display === "none") {
-            resultsDiv.style.display = "block";
-        }
-    });
-   
+<script>
+ // Affiche uniquement le champ État Civil
+ function showEtatCivilField() {
+    document.getElementById('etatCivilField').style.display = 'block';
+    document.getElementById('commissariatField').style.display = 'none';
+    document.getElementById('autresField').style.display = 'none';
+  }
 
+  // Affiche uniquement le champ Commissariat
+  function showCommissariatField() {
+    document.getElementById('commissariatField').style.display = 'block';
+    document.getElementById('etatCivilField').style.display = 'none';
+    document.getElementById('autresField').style.display = 'none';
+  }
+
+  // affiche uniquement le champ Direction
+  function showDirectionField() {
+    document.getElementById('autresField').style.display = 'block';
+    document.getElementById('etatCivilField').style.display = 'none';
+    document.getElementById('commissariatField').style.display = 'none';
+  }
+
+  // CSRF Token Helper
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
+      }
     }
     return cookieValue;
-}
-const csrftoken = getCookie('csrftoken');
-    
+  }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('soumission').addEventListener('click', function(event) {
-            event.preventDefault(); // Empêche le comportement par défaut du bouton
+  const csrftoken = getCookie('csrftoken');
 
-            console.log('working...');
-    
-            // Récupération des valeurs du formulaire
-            const commissariat = document.getElementById('commissariatSelect').value;
-            const etatCivil = document.getElementById('etatCivilSelect').value;
-            const csrfToken = getCookie('csrftoken');
+  // Form Submission Logic
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('soumission').addEventListener('click', function (event) {
+      event.preventDefault(); // Prevent default form submission
 
-            console.log('com:'+commissariat);
-            console.log('etat civil'+etatCivil);
-    
-            // Préparation des données pour l'envoi
-            const formData = new FormData();
-            formData.append('commissariat', commissariat);
-            formData.append('etat_civil', etatCivil);
-            formData.append('csrfmiddlewaretoken', csrfToken);
-    
-            // Envoi de la requête POST en utilisant fetch
-            fetch("{% url 'park:location' %}", {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json()) // Convertir la réponse en JSON
-            .then(data => {
-                const resultsDiv = document.getElementById('results');
-                resultsDiv.innerHTML = ""; // Effacer les résultats précédents
-    
-                if (data.equipements_data.length > 0) {
-                    // Créer un tableau avec les données récupérées
-                    let table = '<table class="table"><thead><tr class="align-middle"><th>Numero de serie</th><th>Type Equipement</th><th>Marque</th><th>Modele</th><th>Date achat</th><th>Date Expiration</th><th>Statut</th></tr></thead>';
-                    data.equipements_data.forEach(function(equipement, index) {
+      // Get form values
+      const commissariat = document.getElementById('commissariatSelect').value;
+      const etatCivil = document.getElementById('etatCivilSelect').value;
+      const direction = document.getElementById('directionSelect').value;
 
-                      let rowClass = ''; // To store the appropriate row class based on status
-                      let statusText = ''; // Text to display for the status
+      // Prepare POST data
+      const formData = new FormData();
+      formData.append('commissariat', commissariat);
+      formData.append('etat_civil', etatCivil);
+      formData.append('direction', direction);
+      formData.append('csrfmiddlewaretoken', csrftoken);
 
-                      // Determine the row class and status text based on the equipment's status
-                      if (equipement.status === 'travail') {
-                          rowClass = 'table-success';
-                          statusText = 'En service';
-                      } else if (equipement.status === 'hors_service') {
-                          rowClass = 'table-info';
-                          statusText = 'Hors Service';
-                      } else if (equipement.status === 'panne') {
-                          rowClass = 'table-danger';
-                          statusText = 'Panne';
-                      } else if (equipement.status === 'en_reparation') {
-                          rowClass = 'table-warning';
-                          statusText = 'En Reparation';
-                      }
-                        table += `
-                           
-                            <tr class="${rowClass}">
-                              <td scope="row">${equipement.serial_number}</td>
-                              <td>${equipement.type_eq}</td>
-                              <td>${equipement.brand}</td>
-                              <td>${equipement.modele_eq}</td>
-                              <td>${equipement.purchase_date}</td>
-                              <td>${equipement.warranty_expire}</td>
-                              <td>${statusText}</td>
-                            </tr>
-                        `;
-                    });
-                    table += '</tbody></table>';
-                    resultsDiv.innerHTML = table; // Insérer le tableau dans le div
-                } else {
-                    resultsDiv.innerHTML = "<p>No equipment found.</p>";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+      // Make an AJAX request
+      fetch("{% url 'park:location' %}", {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          const resultsDiv = document.getElementById('results');
+          resultsDiv.innerHTML = ""; // Clear previous results
+
+          if (data.equipements_data.length > 0) {
+            // Build results table
+            let table = `<table class="table">
+              <thead>
+                <tr>
+                  <th>Numero de serie</th>
+                  <th>Type Equipement</th>
+                  <th>Marque</th>
+                  <th>Modele</th>
+                  <th>Date achat</th>
+                  <th>Date Expiration</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>`;
+            data.equipements_data.forEach(equipement => {
+              let rowClass = '';
+              let statusText = '';
+              if (equipement.status === 'travail') {
+                rowClass = 'table-success';
+                statusText = 'En service';
+              } else if (equipement.status === 'hors_service') {
+                rowClass = 'table-info';
+                statusText = 'Hors Service';
+              } else if (equipement.status === 'panne') {
+                rowClass = 'table-danger';
+                statusText = 'Panne';
+              } else if (equipement.status === 'en_reparation') {
+                rowClass = 'table-warning';
+                statusText = 'En Réparation';
+              }
+              table += `
+                <tr class="${rowClass}">
+                  <td>${equipement.serial_number}</td>
+                  <td>${equipement.type_eq}</td>
+                  <td>${equipement.brand}</td>
+                  <td>${equipement.modele_eq}</td>
+                  <td>${equipement.purchase_date}</td>
+                  <td>${equipement.warranty_expire}</td>
+                  <td>${statusText}</td>
+                </tr>`;
             });
-        });
+            table += '</tbody></table>';
+            resultsDiv.innerHTML = table; // Append results table
+          } else {
+            resultsDiv.innerHTML = "<p>No equipment found.</p>";
+            location.reload();
+          }
+        })
+        .catch(error => console.error('Error:', error));
     });
-    
-
-  
-  </script>
-  
-
+  });
+</script>
 {% endblock content %}

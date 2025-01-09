@@ -19,7 +19,7 @@
                                     <input type="text" class="form-control" id="numero_serie" name="numero_serie">
                                 </div> <!--end::Col--> <!--begin::Col-->
                                 <div class="col-md-6"> 
-                                    <label for="type_equipement" class="form-label">Type Equipement</label> 
+                                    <label for="type_equipement" class="form-label">Equipement</label> 
                                     <select class="form-select" id="type_equipement" name="type_equipment">
                                         <option selected disabled value="">Choisir...</option>
                                         {% for type_eq in type_equipment %}
@@ -38,7 +38,7 @@
                                 <div class="col-md-6"> <label for="validationCustom03" class="form-label">Date Achat</label> 
                                     <input type="date" name="date_achat"  class="form-control" id="date_achat">
                                 </div> <!--end::Col--> <!--begin::Col-->
-                                <div class="col-md-6"> <label for="validationCustom03" class="form-label">Guarantie</label> 
+                                <div class="col-md-6"> <label for="validationCustom03" class="form-label">Date Mise En Service</label> 
                                     <input type="date" name="guarantie"  class="form-control" id="guarantie">
                                 </div> <!--end::Col--> <!--begin::Col-->
                                 <div class="col-md-6"> 
@@ -57,7 +57,7 @@
                                             <option selected disabled value="">Choose...</option>
                                             <option value="commissariat">Commissariat</option>
                                             <option value="etat_civil">Etat Civil</option>
-                                            <option value="data">Autres</option>
+                                            <option value="autres">Autres</option>
                                         </select>
                                     <div class="invalid-feedback">
                                         Please select a valid state.
@@ -109,6 +109,7 @@
       const selectType = document.getElementById('selectType');
       const commissariatField = document.getElementById('commissariatField');
       const etatCivilField = document.getElementById('etatCivilField');
+      const autresField = document.getElementById('autresField');
 
       console.log(selectType);
   
@@ -119,15 +120,18 @@
         // Hide both fields initially using Bootstrap's `d-none`
         commissariatField.classList.add('d-none');
         etatCivilField.classList.add('d-none');
+        autresField.classList.add('d-none');
   
         // Show the corresponding field based on the selection
         if (selectedValue === 'commissariat') {
           commissariatField.classList.remove('d-none');
           commissariatField.classList.add('d-block');
-        } else if (selectedValue === 'etat_civil') {
+        }  
+        if (selectedValue === 'etat_civil') {
           etatCivilField.classList.remove('d-none');
           etatCivilField.classList.add('d-block');
-        } else {
+        } 
+        if (selectedValue === 'autres') {
             autresField.classList.remove('d-none');
             autresField.classList.add('d-block');
         }

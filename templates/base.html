@@ -27,15 +27,21 @@
                 </ul> <!--end::Start Navbar Links--> <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto"> <!--begin::Navbar Search-->
                     <!--end::Navbar Search--> <!--begin::Messages Dropdown Menu-->
-                        
-                    </li> <!--end::Messages Dropdown Menu--> <!--begin::Notifications Dropdown Menu-->
                     <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li> <!--end::Fullscreen Toggle--> <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu"> 
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> 
                          <span class="d-none d-md-inline">{{request.user.email}}</span> 
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
-                            <li class="user-footer"> <a href="" class="btn btn-default btn-flat">{{request.user.role}}</a> <a href="{% url 'authentification:logout' %}" class="btn btn-default btn-flat float-end">Sign out</a> </li> <!--end::Menu Footer-->
+                            <li class="user-footer"> 
+                                <a href="" class="btn btn-default btn-flat">{{request.user.role}}</a> 
+                            </li> <!--end::Menu Footer-->
+                            <li>
+                                <a href="{% url 'authentification:password_change' %}" class="btn btn-default btn-flat">Changer votre mot de pass</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'authentification:logout' %}" class="btn btn-default btn-flat">Sign out</a> 
+                            </li>
                         </ul>
                     </li> <!--end::User Menu Dropdown-->
                 </ul> <!--end::End Navbar Links-->
@@ -105,7 +111,7 @@
         <footer class="app-footer"> <!--begin::To the end-->
             <div class="float-end d-none d-sm-inline">Multimedia Glory Guinea</div> <!--end::To the end--> <!--begin::Copyright--> <strong>
                 Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none">Projet IT</a>.
+                <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
             </strong>
             All rights reserved.
             <!--end::Copyright-->

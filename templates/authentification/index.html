@@ -63,15 +63,15 @@
                       aria-describedby="passwordFeedback">
                   
                     <!-- Gestion des erreurs -->
-                    {% if form.password.errors %}
-                      <div class="invalid-feedback" id="passwordFeedback">
-                        {{ error }}
-                      </div>
-                    {% else %}
-                      <div class="invalid-feedback" id="passwordFeedback">
-                        Veuillez entrer votre mot de passe !
-                      </div>
-                    {% endif %}
+                    {% if error %}
+                        <div class="invalid-feedback text-danger">
+                          {{ error }}
+                        </div>
+                      {% else %}
+                        <div class="invalid-feedback">
+                          Veuillez entrer votre mot de pass, s'il vous plaît.
+                        </div>
+                      {% endif %}
                   </div>
 
                   <!-- Submit Button -->
