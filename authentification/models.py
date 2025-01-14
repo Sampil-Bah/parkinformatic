@@ -47,6 +47,7 @@ class User(AbstractUser):
     ROLE_CHOICES = [
         ('Technicien', 'Technicien'),
         ('Manager', 'Manager'),
+        ('DGA', 'DGA')
     ]
 
     role                = models.CharField(max_length=50, choices=ROLE_CHOICES, verbose_name="User Role")
