@@ -52,6 +52,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,7 +135,7 @@ WSGI_APPLICATION = 'PARK_INFO.wsgi.application'
 #     }
 
 # else:
-#     DATABASES = {
+# DATABASES = {
 #         'default': {
 #             'ENGINE': 'django.db.backends.sqlite3',
 #             'NAME': BASE_DIR / 'db.sqlite3',
@@ -206,3 +208,15 @@ LOGIN_REDIRECT_URL = 'park:home'
 LOGIN_URL = "authentification:login"
 
 AUTH_USER_MODEL = 'authentification.User'
+
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "MGG HELPDESK Admin",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "MGG HELPDESK",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "MGG HELPDESK",
+}
